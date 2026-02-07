@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Mi Teléfono Mágico</title>
+    <link rel="icon" type="image/png" href="assets/logo.png">
+    <script src="https://code.responsivevoice.org/responsivevoice.js?key=f764a581"></script>
+    <style>
+        :root {
+            --bg-color: #FFD700;
+            --font-family: 'Arial Rounded MT Bold', 'Comic Sans MS', sans-serif;
+        }
+
+        * {
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+            user-select: none;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: var(--bg-color);
+            font-family: var(--font-family);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        h1 {
+            margin-top: 20px;
+            font-size: 2rem;
+            text-align: center;
+            color: #333;
+            text-shadow: 2px 2px white;
+        }
+
+        .app-logo {
+            width: 80px;
+            height: 80px;
+            margin: 10px auto;
+            border-radius: 20px;
+            border: 4px solid white;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            display: block;
+            object-fit: contain;
+            background-color: white;
+        }
+
+        .phone-container {
+            width: 100%;
+            max-width: 450px;
+            padding: 20px;
+            flex-grow: 1;
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            grid-gap: 15px;
+            align-content: center;
+        }
+
+        .btn-call {
+            aspect-ratio: 1;
+            border-radius: 40px;
+            border: 8px solid white;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
+            transition: transform 0.1s;
+        }
+
+        .btn-call:active {
+            transform: scale(0.9);
+        }
+
+        .btn-call .emoji {
+            font-size: 4rem;
+        }
+
+        .btn-call .label {
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: white;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+        }
+
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 100;
+            background: rgba(0, 0, 0, 0.95);
+            animation: fadeIn 0.3s;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+
+            to {
+                opacity: 1;
+            }
+        }
+
+        .calling-info {
+            text-align: center;
+            color: white;
+            margin-bottom: 30px;
+        }
+
+        .calling-emoji {
+            font-size: 8rem;
+            margin-bottom: 10px;
+        }
+
+        .calling-name {
+            font-size: 2.5rem;
+            font-weight: bold;
+        }
+
+        .calling-status {
+            font-size: 1.2rem;
+            color: #FFD700;
+            margin-top: 5px;
+        }
+
+        .controls {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+        }
+
+        #onboarding {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--bg-color);
+            z-index: 5000;
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 30px;
+        }
+
+        #onboarding h2 {
+            font-size: 2.5rem;
+            color: #333;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px white;
+        }
+
+        #onboarding input {
+            width: 80%;
+            max-width: 300px;
+            padding: 15px;
+            font-size: 1.5rem;
+            border-radius: 20px;
+            border: 5px solid white;
+            text-align: center;
+            font-family: var(--font-family);
+            margin-bottom: 20px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        #onboarding button {
+            padding: 15px 40px;
+            font-size: 1.5rem;
+            background: #4CAF50;
+            color: white;
+            border-radius: 30px;
+            border: 5px solid white;
+            cursor: pointer;
+            font-family: var(--font-family);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        #btn-hangup {
+            width: 100px;
+            height: 100px;
+            background: #FF3B30;
+            border-radius: 50%;
+            border: 6px solid white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 0 30px rgba(255, 59, 48, 0.6);
+            font-size: 3rem;
+            color: white;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% {
+                box-shadow: 0 0 10px rgba(255, 59, 48, 0.5);
+            }
+
+            50% {
+                box-shadow: 0 0 40px rgba(255, 59, 48, 0.8);
+            }
+
+            100% {
+                box-shadow: 0 0 10px rgba(255, 59, 48, 0.5);
+            }
+        }
+
+        .magical-stars {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: transparent;
+            pointer-events: none;
+            overflow: hidden;
+            z-index: -1;
+        }
+
+        .star {
+            position: absolute;
+            color: gold;
+            font-size: 1.5rem;
+            animation: float 3s infinite ease-in-out;
+            opacity: 0.8;
+        }
+
+        @keyframes float {
+
+            0%,
+            100% {
+                transform: translateY(0) scale(1);
+                opacity: 0.5;
+            }
+
+            50% {
+                transform: translateY(-20px) scale(1.3);
+                opacity: 1;
+            }
+        }
+    </style>
+</head>
+
+<body onclick="initAudio()">
+    <img src="assets/logo.png" alt="Logo" class="app-logo">
+    <h1>Mi Teléfono Mágico</h1>
+
+    <div class="phone-container" id="grid"></div>
+
+    <div id="onboarding">
+        <h2>🌈 ¡Hola! 🌈<br>¿Cómo te llamas?</h2>
+        <input type="text" id="kid-name" placeholder="Tu nombre aquí...">
+        <button onclick="saveName()">✨ ¡Listo! ✨</button>
+    </div>
+
+    <div id="call-overlay" class="overlay">
+        <div class="magical-stars" id="stars-layer"></div>
+        <div class="calling-info">
+            <div class="calling-emoji" id="m-emoji"></div>
+            <div class="calling-name" id="m-name"></div>
+            <div id="m-status" class="calling-status">Llamando...</div>
+        </div>
+        <div class="controls">
+            <div id="btn-hangup" onclick="colgar()">❌</div>
+        </div>
+    </div>
+
+    <script>
+        let groqKey = "";
+        const contacts = [
+            { label: 'Doctora', emoji: '👩‍⚕️', color: '#FF5733', theme: 'radial-gradient(circle, #fff5f5, #ffcccc)', voice: { p: 1.2, r: 0.9 }, sys: 'Eres la Doctora Corazón. Responde corto (1 frase).' },
+            { label: 'Policía', emoji: '👮‍♂️', color: '#3498DB', theme: 'linear-gradient(135deg, #e0f2ff, #b3d9ff)', voice: { p: 0.8, r: 1.0 }, sys: 'Eres el Oficial Valiente. Responde corto (1 frase).' },
+            { label: 'Bomberos', emoji: '🚒', color: '#E67E22', theme: 'linear-gradient(180deg, #fff3e6, #ffcc99)', voice: { p: 1.0, r: 1.1 }, sys: 'Eres el Comandante Fuego. Responde corto (1 frase).' },
+            { label: 'La Bruja', emoji: '🧙‍♀️', color: '#9B59B6', theme: 'radial-gradient(circle, #f5e6ff, #d9b3ff)', voice: { p: 1.6, r: 0.9 }, sys: 'Eres la Bruja Gurgu. Responde corto (1 frase).' },
+            { label: 'Fantasmito', emoji: '👻', color: '#7FB3D5', theme: 'linear-gradient(to bottom, #1a2a6c, #b21f1f, #fdbb2d)', voice: { p: 0.6, r: 0.8 }, sys: 'Eres Buh, el Fantasmito. Responde corto (1 frase).' },
+            { label: 'Ratón Pérez', emoji: '🐭', color: '#F1C40F', theme: 'radial-gradient(circle, #fffbe6, #fff0b3)', voice: { p: 1.8, r: 1.3 }, sys: 'Eres el Ratón Pérez. Responde corto (1 frase).' }
+        ];
+
+        let activeContact, recognition, audioCtx;
+        let history = [];
+        let userName = localStorage.getItem('kid_name') || "";
+
+        function init() {
+            if (!userName) {
+                document.getElementById('onboarding').style.display = 'flex';
+            }
+            const grid = document.getElementById('grid');
+            contacts.forEach(c => {
+                const div = document.createElement('div');
+                div.className = 'btn-call';
+                div.style.backgroundColor = c.color;
+                div.innerHTML = `<span class="emoji">${c.emoji}</span><span class="label">${c.label}</span>`;
+                div.onclick = () => { initAudio(); llamar(c); };
+                grid.appendChild(div);
+            });
+            setupSTT();
+            const _k = "Z3NrX3NNTDVNcUJSTjlTQmFkUjRVdEtqV0dyeWIzRlk2dlZWWUZZZk1PSTN0SU5jNGFwQmZrR2c=";
+            groqKey = atob(_k);
+        }
+
+        function saveName() {
+            const name = document.getElementById('kid-name').value.trim();
+            if (name) {
+                userName = name;
+                localStorage.setItem('kid_name', name);
+                document.getElementById('onboarding').style.display = 'none';
+                initAudio(); // Aprovechar gesto para audio
+            }
+        }
+
+        async function initAudio() {
+            try {
+                if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+                if (audioCtx.state === 'suspended') await audioCtx.resume();
+                const buffer = audioCtx.createBuffer(1, 1, 22050);
+                const source = audioCtx.createBufferSource();
+                source.buffer = buffer;
+                source.connect(audioCtx.destination);
+                source.start(0);
+            } catch (e) { console.error(e); }
+        }
+
+        function llamar(c) {
+            activeContact = c;
+            history = [];
+            const overlay = document.getElementById('call-overlay');
+            overlay.style.background = c.theme;
+            overlay.style.display = 'flex';
+            document.getElementById('m-emoji').innerText = c.emoji;
+            document.getElementById('m-name').innerText = c.label;
+            document.getElementById('m-status').innerText = "Llamando...";
+            createStars();
+            playRingtone();
+            setTimeout(() => {
+                hablar(`¡Hola ${userName || "amiguito"}! Soy tu ${c.label}. ¿Qué me quieres contar?`);
+            }, 2500);
+        }
+
+        function createStars() {
+            const layer = document.getElementById('stars-layer');
+            layer.innerHTML = "";
+            for (let i = 0; i < 15; i++) {
+                const star = document.createElement('div');
+                star.className = 'star';
+                star.innerText = "✨";
+                star.style.left = Math.random() * 100 + "%";
+                star.style.top = Math.random() * 100 + "%";
+                star.style.animationDelay = Math.random() * 2 + "s";
+                layer.appendChild(star);
+            }
+        }
+
+        function playRingtone() {
+            if (!audioCtx) return;
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+            osc.type = 'sine';
+            osc.frequency.setValueAtTime(440, audioCtx.currentTime);
+            gain.gain.setValueAtTime(0, audioCtx.currentTime);
+            gain.gain.linearRampToValueAtTime(0.1, audioCtx.currentTime + 0.1);
+            gain.gain.linearRampToValueAtTime(0, audioCtx.currentTime + 0.6);
+            osc.connect(gain);
+            gain.connect(audioCtx.destination);
+            osc.start();
+            osc.stop(audioCtx.currentTime + 0.7);
+        }
+
+        async function procesarIA(msg) {
+            document.getElementById('m-status').innerText = "Pensando...";
+            try {
+                const res = await fetch("https://api.groq.com/openai/v1/chat/completions", {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${groqKey}` },
+                    body: JSON.stringify({
+                        model: "llama-3.3-70b-versatile",
+                        messages: [
+                            { role: "system", content: activeContact.sys },
+                            ...history.slice(-4).map(h => ({ role: h.role === "niño" ? "user" : "assistant", content: h.content })),
+                            { role: "user", content: msg }
+                        ]
+                    })
+                });
+                const data = await res.json();
+                const respuesta = data.choices[0].message.content;
+                history.push({ role: "niño", content: msg }, { role: "personaje", content: respuesta });
+                hablar(respuesta);
+            } catch (e) {
+                hablar("¡Qué divertido! Cuéntame más cosas.");
+            }
+        }
+
+        function hablar(txt) {
+            document.getElementById('m-status').innerText = "Hablando...";
+            const onDone = () => {
+                document.getElementById('m-status').innerText = "En línea";
+                setTimeout(() => { if (document.getElementById('call-overlay').style.display === 'flex') escuchar(); }, 500);
+            };
+
+            if (window.speechSynthesis) {
+                window.speechSynthesis.cancel();
+                const Utterance = window.SpeechSynthesisUtterance || window.webkitSpeechSynthesisUtterance;
+                if (Utterance) {
+                    const ut = new Utterance(txt);
+                    ut.lang = 'es-ES';
+                    ut.pitch = activeContact.voice.p;
+                    ut.rate = activeContact.voice.r;
+                    ut.onend = onDone;
+                    window.speechSynthesis.speak(ut);
+                    return;
+                }
+            }
+
+            if (window.responsiveVoice) {
+                window.responsiveVoice.speak(txt, "Spanish Female", { pitch: activeContact.voice.p, rate: activeContact.voice.r, onend: onDone });
+            } else { onDone(); }
+        }
+
+        function setupSTT() {
+            const Speech = window.SpeechRecognition || window.webkitSpeechRecognition;
+            if (Speech) {
+                recognition = new Speech();
+                recognition.lang = 'es-ES';
+                recognition.onresult = (e) => procesarIA(e.results[0][0].transcript);
+                recognition.onstart = () => document.getElementById('m-status').innerText = "Escuchando...";
+                recognition.onerror = () => { if (document.getElementById('call-overlay').style.display === 'flex') setTimeout(escuchar, 1000); };
+            }
+        }
+
+        function escuchar() { try { if (recognition) recognition.start(); } catch (e) { } }
+
+        function colgar() {
+            document.getElementById('call-overlay').style.display = 'none';
+            if (window.speechSynthesis) window.speechSynthesis.cancel();
+            if (recognition) recognition.stop();
+        }
+
+        init();
+    </script>
+</body>
+
+</html>
