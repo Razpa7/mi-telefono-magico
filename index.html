@@ -17,35 +17,39 @@
             box-sizing: border-box;
             -webkit-tap-highlight-color: transparent;
             user-select: none;
+            outline: none;
         }
 
         body {
             margin: 0;
             padding: 0;
-            background-color: var(--bg-color);
+            background: linear-gradient(135deg, #FFD700, #FFEC8B);
             font-family: var(--font-family);
             display: flex;
             flex-direction: column;
             align-items: center;
             height: 100vh;
             overflow: hidden;
+            touch-action: manipulation;
+            -webkit-font-smoothing: antialiased;
         }
 
         h1 {
-            margin-top: 20px;
-            font-size: 2rem;
+            margin: 10px 0 5px 0;
+            font-size: 1.8rem;
             text-align: center;
             color: #333;
             text-shadow: 2px 2px white;
+            padding: 0 15px;
         }
 
         .app-logo {
-            width: 80px;
-            height: 80px;
-            margin: 10px auto;
+            width: 70px;
+            height: 70px;
+            margin: 10px auto 5px;
             border-radius: 20px;
-            border: 4px solid white;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            border: 5px solid white;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
             display: block;
             object-fit: contain;
             background-color: white;
@@ -53,41 +57,83 @@
 
         .phone-container {
             width: 100%;
-            max-width: 450px;
-            padding: 20px;
+            max-width: 500px;
+            padding: 15px 20px;
             flex-grow: 1;
             display: grid;
             grid-template-columns: repeat(2, 1fr);
-            grid-gap: 15px;
+            grid-gap: 20px;
             align-content: center;
         }
 
         .btn-call {
             aspect-ratio: 1;
-            border-radius: 40px;
-            border: 8px solid white;
+            border-radius: 50%;
+            border: 12px solid white;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
             cursor: pointer;
-            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
-            transition: transform 0.1s;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
+            transition: all 0.2s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-call::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(255, 255, 255, 0.1);
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .btn-call:hover::before {
+            opacity: 1;
         }
 
         .btn-call:active {
-            transform: scale(0.9);
+            transform: scale(0.95);
+            box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
         }
 
         .btn-call .emoji {
             font-size: 4rem;
+            margin-bottom: 5px;
+            filter: drop-shadow(2px 2px 2px rgba(0, 0, 0, 0.2));
+            transition: transform 0.3s;
+        }
+
+        .btn-call.active .emoji {
+            transform: scale(1.1);
+            animation: bounce 0.5s ease;
+        }
+
+        @keyframes bounce {
+
+            0%,
+            100% {
+                transform: scale(1);
+            }
+
+            50% {
+                transform: scale(1.2);
+            }
         }
 
         .btn-call .label {
             font-size: 1.2rem;
             font-weight: bold;
             color: white;
-            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.4);
+            background: rgba(0, 0, 0, 0.2);
+            padding: 3px 10px;
+            border-radius: 10px;
         }
 
         .overlay {
@@ -102,7 +148,7 @@
             justify-content: center;
             z-index: 100;
             background: rgba(0, 0, 0, 0.95);
-            animation: fadeIn 0.3s;
+            animation: fadeIn 0.3s ease;
         }
 
         @keyframes fadeIn {
@@ -118,30 +164,116 @@
         .calling-info {
             text-align: center;
             color: white;
-            margin-bottom: 30px;
+            margin-bottom: 40px;
+            padding: 0 20px;
         }
 
         .calling-emoji {
             font-size: 8rem;
-            margin-bottom: 10px;
+            margin-bottom: 15px;
+            animation: pulse 2s infinite;
+            filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.3));
+        }
+
+        @keyframes pulse {
+
+            0%,
+            100% {
+                transform: scale(1);
+            }
+
+            50% {
+                transform: scale(1.1);
+            }
         }
 
         .calling-name {
             font-size: 2.5rem;
             font-weight: bold;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
         }
 
         .calling-status {
-            font-size: 1.2rem;
+            font-size: 1.3rem;
             color: #FFD700;
             margin-top: 5px;
+            font-weight: bold;
+            min-height: 25px;
         }
 
-        .controls {
+        #btn-hangup {
+            width: 100px;
+            height: 100px;
+            background: #FF3B30;
+            border-radius: 50%;
+            border: 8px solid white;
             display: flex;
-            flex-direction: column;
             align-items: center;
-            gap: 20px;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 2.8rem;
+            color: white;
+            box-shadow: 0 0 25px rgba(255, 59, 48, 0.5);
+            transition: all 0.2s;
+            margin-top: 20px;
+        }
+
+        #btn-hangup:active {
+            transform: scale(0.9);
+            box-shadow: 0 0 15px rgba(255, 59, 48, 0.3);
+        }
+
+        #status-bar {
+            position: fixed;
+            top: 15px;
+            left: 15px;
+            font-size: 12px;
+            background: rgba(0, 0, 0, 0.7);
+            color: white;
+            padding: 8px 15px;
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            z-index: 1000;
+            backdrop-filter: blur(5px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        #status-light {
+            width: 14px;
+            height: 14px;
+            border-radius: 50%;
+            background: #666;
+            border: 2px solid white;
+            transition: background-color 0.3s;
+        }
+
+        .status-connected {
+            background: #4CAF50 !important;
+            animation: blink 2s infinite;
+        }
+
+        .status-connecting {
+            background: #FF9800 !important;
+            animation: blink 1s infinite;
+        }
+
+        .status-disconnected {
+            background: #F44336 !important;
+        }
+
+        @keyframes blink {
+
+            0%,
+            100% {
+                opacity: 1;
+            }
+
+            50% {
+                opacity: 0.5;
+            }
         }
 
         #onboarding {
@@ -150,83 +282,98 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: var(--bg-color);
+            background: linear-gradient(135deg, #FFD700, #FFA500);
             z-index: 5000;
             display: none;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            text-align: center;
             padding: 30px;
+            animation: fadeIn 0.5s;
         }
 
         #onboarding h2 {
-            font-size: 2.5rem;
+            font-size: 2.2rem;
             color: #333;
-            margin-bottom: 20px;
             text-shadow: 2px 2px white;
+            margin-bottom: 30px;
+            text-align: center;
+            padding: 0 20px;
         }
 
         #onboarding input {
-            width: 80%;
+            width: 90%;
             max-width: 300px;
-            padding: 15px;
-            font-size: 1.5rem;
-            border-radius: 20px;
+            padding: 18px;
+            font-size: 1.6rem;
+            border-radius: 25px;
             border: 5px solid white;
+            margin-bottom: 25px;
             text-align: center;
             font-family: var(--font-family);
-            margin-bottom: 20px;
             box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s;
         }
 
         #onboarding button {
-            padding: 15px 40px;
+            padding: 18px 50px;
             font-size: 1.5rem;
-            background: #4CAF50;
+            background: linear-gradient(145deg, #4CAF50, #2E7D32);
             color: white;
             border-radius: 30px;
             border: 5px solid white;
+            font-weight: bold;
             cursor: pointer;
-            font-family: var(--font-family);
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+            transition: all 0.3s;
         }
 
-        #btn-hangup {
-            width: 100px;
-            height: 100px;
-            background: #FF3B30;
+        .connection-message {
+            position: fixed;
+            bottom: 20px;
+            left: 0;
+            right: 0;
+            text-align: center;
+            color: #666;
+            font-size: 0.9rem;
+            padding: 10px;
+            background: rgba(255, 255, 255, 0.8);
+            border-radius: 10px;
+            margin: 0 20px;
+            display: none;
+            z-index: 100;
+        }
+
+        .loader {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255, 255, 255, .3);
             border-radius: 50%;
-            border: 6px solid white;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            box-shadow: 0 0 30px rgba(255, 59, 48, 0.6);
-            font-size: 3rem;
-            color: white;
-            animation: pulse 2s infinite;
+            border-top-color: #FFD700;
+            animation: spin 1s ease-in-out infinite;
+            margin-left: 10px;
         }
 
-        @keyframes pulse {
-            0% {
-                box-shadow: 0 0 10px rgba(255, 59, 48, 0.5);
-            }
-
-            50% {
-                box-shadow: 0 0 40px rgba(255, 59, 48, 0.8);
-            }
-
-            100% {
-                box-shadow: 0 0 10px rgba(255, 59, 48, 0.5);
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
             }
         }
 
+        .help-text {
+            text-align: center;
+            color: #666;
+            font-size: 0.9rem;
+            margin-top: 10px;
+            padding: 0 20px;
+        }
+
+        /* Magical Stars Overlay Logic */
         .magical-stars {
             position: absolute;
             width: 100%;
             height: 100%;
-            background: transparent;
             pointer-events: none;
             overflow: hidden;
             z-index: -1;
@@ -258,14 +405,23 @@
 
 <body onclick="initAudio()">
 
+    <div id="status-bar">
+        <div id="status-light"></div>
+        <span id="conn-text">CONECTANDO...</span>
+        <div class="loader" id="connection-loader"></div>
+    </div>
+
     <h1>Mi Teléfono Mágico</h1>
+    <div class="help-text">¡Toca a cualquier personaje para hablar con él!</div>
 
     <div class="phone-container" id="grid"></div>
 
     <div id="onboarding">
-        <h2>🌈 ¡Hola! 🌈<br>¿Cómo te llamas?</h2>
-        <input type="text" id="kid-name" placeholder="Tu nombre aquí...">
-        <button onclick="saveName()">✨ ¡Listo! ✨</button>
+        <h2>🌈 ¡Hola Amiguito! 🌈<br>¿Cómo te llamas?</h2>
+        <input type="text" id="kid-name" placeholder="Escribe tu nombre aquí..." maxlength="20" autocomplete="off">
+        <button onclick="saveName()">✨ ¡EMPEZAR! ✨</button>
+        <div class="help-text" style="color: white; margin-top: 20px;">Tu nombre aparecerá cuando hables con los
+            personajes</div>
     </div>
 
     <div id="call-overlay" class="overlay">
@@ -280,38 +436,99 @@
         </div>
     </div>
 
+    <div class="connection-message" id="connection-message">
+        🔄 Intentando conectar con el cerebro mágico...
+    </div>
+
     <script>
+        // CONFIGURACIÓN MAESTRA
         let groqKey = "";
+        const CONFIG = {
+            maxRetries: 3,
+            connectionTimeout: 8000
+        };
+
         const contacts = [
             { label: 'Doctora', emoji: '👩‍⚕️', color: '#FF5733', theme: 'radial-gradient(circle, #fff5f5, #ffcccc)', voice: { p: 1.2, r: 0.9 }, sys: 'Eres la Doctora Corazón. REGLAS: 1) Si pide hablar con otro, usa EXACTAMENTE: [TRANSFER:Policía], [TRANSFER:Bomberos], [TRANSFER:La Bruja], [TRANSFER:Fantasmito] o [TRANSFER:Ratón Pérez]. 2) Si menciona dientes o ratones, usa [TRANSFER:Ratón Pérez]. 3) Responde corto (1 frase).' },
             { label: 'Policía', emoji: '👮‍♂️', color: '#3498DB', theme: 'linear-gradient(135deg, #e0f2ff, #b3d9ff)', voice: { p: 0.8, r: 1.0 }, sys: 'Eres el Oficial Valiente. REGLAS: 1) Si pide hablar con otro, usa EXACTAMENTE: [TRANSFER:Doctora], [TRANSFER:Bomberos], [TRANSFER:La Bruja], [TRANSFER:Fantasmito] o [TRANSFER:Ratón Pérez]. 2) Si hay fuego o incendios, usa [TRANSFER:Bomberos]. 3) Responde corto (1 frase).' },
             { label: 'Bomberos', emoji: '🚒', color: '#E67E22', theme: 'linear-gradient(180deg, #fff3e6, #ffcc99)', voice: { p: 1.0, r: 1.1 }, sys: 'Eres el Comandante Fuego. REGLAS: 1) Si pide hablar con otro, usa EXACTAMENTE: [TRANSFER:Doctora], [TRANSFER:Policía], [TRANSFER:La Bruja], [TRANSFER:Fantasmito] o [TRANSFER:Ratón Pérez]. 2) Responde corto (1 frase).' },
             { label: 'La Bruja', emoji: '🧙‍♀️', color: '#9B59B6', theme: 'radial-gradient(circle, #f5e6ff, #d9b3ff)', voice: { p: 1.6, r: 0.9 }, sys: 'Eres la Bruja Gurgu. REGLAS: 1) Si pide hablar con otro, usa EXACTAMENTE: [TRANSFER:Doctora], [TRANSFER:Policía], [TRANSFER:Bomberos], [TRANSFER:Fantasmito] o [TRANSFER:Ratón Pérez]. 2) Responde corto (1 frase).' },
             { label: 'Fantasmito', emoji: '👻', color: '#7FB3D5', theme: 'linear-gradient(to bottom, #1a2a6c, #b21f1f, #fdbb2d)', voice: { p: 0.6, r: 0.8 }, sys: 'Eres Buh, el Fantasmito. REGLAS: 1) Si pide hablar con otro, usa EXACTAMENTE: [TRANSFER:Doctora], [TRANSFER:Policía], [TRANSFER:Bomberos], [TRANSFER:La Bruja] o [TRANSFER:Ratón Pérez]. 2) Responde corto (1 frase).' },
-            { label: 'Ratón Pérez', emoji: '🐭', color: '#F1C40F', theme: 'radial-gradient(circle, #fffbe6, #fff0b3)', voice: { p: 1.8, r: 1.3 }, sys: 'Eres el Ratón Pérez. REGLAS: 1) Si pide hablar con otro, usa EXACTAMENTE: [TRANSFER:Doctora], [TRANSFER:Policía], [TRANSFER:Bomberos], [TRANSFER:La Bruja] o [TRANSFER:Fantasmito]. 2) Responde corto (1 frase).' }
+            { label: 'Ratón Pérez', emoji: '🐭', color: '#F1C40F', theme: 'radial-gradient(circle, #fffbe6, #fff0b3)', voice: { p: 1.8, r: 1.3 }, sys: 'Eres el Ratón Pérez. REGLAS: 1) Si pide hablar con otro, usa EXACTAMENTE: [TRANSFER:Doctora], [TRANSFER:Policía], [TRANSFER:Bomberos], [TRANSFER:La Bru_ja] o [TRANSFER:Fantasmito]. 2) Responde corto (1 frase).' }
         ];
 
         let activeContact, recognition, audioCtx;
         let history = [];
         let userName = localStorage.getItem('kid_name') || "";
+        let isConnected = false;
 
         function init() {
+            renderGrid();
             if (!userName) {
                 document.getElementById('onboarding').style.display = 'flex';
             }
+            setupSTT();
+            initBrain();
+        }
+
+        function initBrain() {
+            // LLAVE MASTER v30.0
+            const _k = "Z3NrXzRwWHhORHoxdVBtdmhISVBNVEVXV0dyeWIzRlk1cEJGNWFsb2l4dWJpRHBHRkpIa1F5SWI=";
+            groqKey = atob(_k);
+            testConnection();
+        }
+
+        function renderGrid() {
             const grid = document.getElementById('grid');
             grid.innerHTML = "";
             contacts.forEach(c => {
                 const div = document.createElement('div');
                 div.className = 'btn-call';
-                div.style.backgroundColor = c.color;
+                div.style.background = `radial-gradient(circle at 30% 30%, ${c.color}, ${darkenColor(c.color, 20)})`;
                 div.innerHTML = `<span class="emoji">${c.emoji}</span><span class="label">${c.label}</span>`;
                 div.onclick = () => { initAudio(); llamar(c); };
                 grid.appendChild(div);
             });
-            setupSTT();
-            const _k = "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=";
-            groqKey = atob(_k);
+        }
+
+        function darkenColor(color, percent) {
+            const num = parseInt(color.replace("#", ""), 16);
+            const amt = Math.round(2.55 * percent);
+            const R = (num >> 16) - amt;
+            const G = (num >> 8 & 0x00FF) - amt;
+            const B = (num & 0x0000FF) - amt;
+            return "#" + (0x1000000 + (R < 255 ? R < 1 ? 0 : R : 255) * 0x10000 + (G < 255 ? G < 1 ? 0 : G : 255) * 0x100 + (B < 255 ? B < 1 ? 0 : B : 255)).toString(16).slice(1);
+        }
+
+        async function testConnection() {
+            updateStatus('connecting', 'CONECTANDO...');
+            try {
+                const res = await fetch("https://api.groq.com/openai/v1/chat/completions", {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${groqKey}` },
+                    body: JSON.stringify({ model: "llama-3.3-70b-versatile", messages: [{ role: "user", content: "hi" }], max_tokens: 5 })
+                });
+                if (res.ok) {
+                    isConnected = true;
+                    updateStatus('connected', 'CONECTADO ✅');
+                } else {
+                    updateStatus('disconnected', 'MODO LOCAL 🔄');
+                }
+            } catch (e) {
+                updateStatus('disconnected', 'MODO LOCAL 🔄');
+            }
+        }
+
+        function updateStatus(status, text) {
+            const light = document.getElementById('status-light');
+            const label = document.getElementById('conn-text');
+            const loader = document.getElementById('connection-loader');
+            if (light) {
+                light.className = '';
+                light.classList.add('status-' + status);
+            }
+            if (label) label.innerText = text;
+            if (loader) loader.style.display = (status === 'connecting') ? 'inline-block' : 'none';
         }
 
         function saveName() {
@@ -328,12 +545,7 @@
             try {
                 if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
                 if (audioCtx.state === 'suspended') await audioCtx.resume();
-                const buffer = audioCtx.createBuffer(1, 1, 22050);
-                const source = audioCtx.createBufferSource();
-                source.buffer = buffer;
-                source.connect(audioCtx.destination);
-                source.start(0);
-            } catch (e) { console.error("Audio Init Error:", e); }
+            } catch (e) { }
         }
 
         function llamar(c) {
@@ -370,10 +582,9 @@
             if (!audioCtx) return;
             const osc = audioCtx.createOscillator();
             const gain = audioCtx.createGain();
-            osc.type = 'sine';
             osc.frequency.setValueAtTime(440, audioCtx.currentTime);
             gain.gain.setValueAtTime(0, audioCtx.currentTime);
-            gain.gain.linearRampToValueAtTime(0.05, audioCtx.currentTime + 0.1);
+            gain.gain.linearRampToValueAtTime(0.1, audioCtx.currentTime + 0.1);
             gain.gain.linearRampToValueAtTime(0, audioCtx.currentTime + 0.6);
             osc.connect(gain);
             gain.connect(audioCtx.destination);
@@ -402,10 +613,8 @@
                 if (res.ok) {
                     const data = await res.json();
                     respuesta = data.choices[0].message.content;
-                } else {
-                    console.error("Groq API Error:", res.status);
                 }
-            } catch (e) { console.error("Network Error Groq:", e); }
+            } catch (e) { }
 
             if (!respuesta) respuesta = fallbackLocal(msg);
 
@@ -430,13 +639,10 @@
                     else { document.getElementById('m-status').innerText = "En línea"; setTimeout(escuchar, 500); }
                 } else {
                     document.getElementById('m-status').innerText = "En línea";
-                    if (document.getElementById('call-overlay').style.display === 'flex') {
-                        setTimeout(escuchar, 500);
-                    }
+                    if (document.getElementById('call-overlay').style.display === 'flex') setTimeout(escuchar, 500);
                 }
             };
 
-            // Intentar síntesis nativa
             if (window.speechSynthesis) {
                 window.speechSynthesis.cancel();
                 const ut = new SpeechSynthesisUtterance(txt);
@@ -444,10 +650,7 @@
                 ut.pitch = activeContact.voice.p;
                 ut.rate = activeContact.voice.r;
                 ut.onend = onDone;
-                ut.onerror = () => {
-                    console.warn("Speech Synthesis Native Error, trying Fallback...");
-                    useResponsiveVoice(txt, onDone);
-                };
+                ut.onerror = () => useResponsiveVoice(txt, onDone);
                 window.speechSynthesis.speak(ut);
             } else {
                 useResponsiveVoice(txt, onDone);
@@ -457,10 +660,7 @@
         function useResponsiveVoice(txt, onDone) {
             if (window.responsiveVoice) {
                 window.responsiveVoice.speak(txt, "Spanish Female", { pitch: activeContact.voice.p, rate: activeContact.voice.r, onend: onDone });
-            } else {
-                console.error("No Speech System available");
-                onDone();
-            }
+            } else { onDone(); }
         }
 
         function setupSTT() {
@@ -484,16 +684,13 @@
 
         function fallbackLocal(msg) {
             const m = msg.toLowerCase();
-            if (m.includes("duele") || m.includes("enfermo")) return "¡Oh! Ya mismo te curo con un abrazo mágico y un beso.";
-            if (m.includes("miedo") || m.includes("asusta")) return "No pasa nada, yo te cuido mucho. ¡Eres muy valiente!";
-            if (m.includes("hola") || m.includes("qué tal")) return "¡Hola amiguito! Estoy muy feliz de hablar contigo.";
-            return "¡Qué divertido! Cuéntame más cosas, te escucho con mis orejas mágicas.";
+            if (m.includes("duele")) return "¡Oh! Ya mismo te curo con un abrazo mágico.";
+            if (m.includes("miedo")) return "No pasa nada, yo te cuido mucho.";
+            return "¡Qué bien! Cuéntame más cosas divertidas.";
         }
 
         init();
     </script>
-
-
 </body>
 
 </html>
