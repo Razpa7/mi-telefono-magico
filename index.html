@@ -440,7 +440,16 @@
         🔄 Intentando conectar con el cerebro mágico...
     </div>
 
+    <div id="debug-log"
+        style="position:fixed; bottom:0; left:0; width:100%; height:100px; background:rgba(0,0,0,0.8); color:lime; font-size:10px; overflow:auto; z-index:9999; display:none; pointer-events:none;">
+    </div>
+
     <script>
+        function log(msg) {
+            console.log(msg);
+            const d = document.getElementById('debug-log');
+            if (d) d.innerHTML = `[${new Date().toLocaleTimeString()}] ${msg}<br>` + d.innerHTML;
+        }
         // CONFIGURACIÓN MAESTRA
         let groqKey = "";
         const CONFIG = {
@@ -472,6 +481,7 @@
         }
 
         function initBrain() {
+            log("🧠 Inicializando Cerebro...");
             // LLAVE DIRECTA (Solicitado por el usuario para pruebas)
             groqKey = "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";
             testConnection();
@@ -509,11 +519,14 @@
                 });
                 if (res.ok) {
                     isConnected = true;
+                    log("✅ Conexión Groq OK");
                     updateStatus('connected', 'CONECTADO ✅');
                 } else {
+                    log(`⚠️ Error Groq: ${res.status}`);
                     updateStatus('disconnected', 'MODO LOCAL 🔄');
                 }
             } catch (e) {
+                log("❌ Error Red: " + e.message);
                 updateStatus('disconnected', 'MODO LOCAL 🔄');
             }
         }
