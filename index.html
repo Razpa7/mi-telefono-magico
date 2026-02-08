@@ -400,7 +400,7 @@
             { label: 'Bomberos', emoji: '🚒', color: '#E67E22', theme: 'linear-gradient(180deg, #fff3e6, #ffcc99)', voice: { p: 1.0, r: 1.1 }, sys: 'Eres el Comandante Fuego. REGLAS: 1) Si pide hablar con otro, usa EXACTAMENTE: [TRANSFER:Doctora], [TRANSFER:Policía], [TRANSFER:La Bruja], [TRANSFER:Cuco] o [TRANSFER:Ratón Pérez]. 2) Responde corto (1 frase).' },
             { label: 'La Bruja', emoji: '🧙‍♀️', color: '#9B59B6', theme: 'radial-gradient(circle, #f5e6ff, #d9b3ff)', voice: { p: 1.6, r: 0.9 }, sys: 'Eres la Bruja Gurgu. REGLAS: 1) Si pide hablar con otro, usa EXACTAMENTE: [TRANSFER:Doctora], [TRANSFER:Policía], [TRANSFER:Bomberos], [TRANSFER:Cuco] o [TRANSFER:Ratón Pérez]. 2) Responde corto (1 frase).' },
             { label: 'Cuco', emoji: '👻', color: '#7FB3D5', theme: 'linear-gradient(to bottom, #1a2a6c, #b21f1f, #fdbb2d)', voice: { p: 0.6, r: 0.8 }, sys: 'Eres Cuco, el Fantasmito. REGLAS: 1) Si pide hablar con otro, usa EXACTAMENTE: [TRANSFER:Doctora], [TRANSFER:Policía], [TRANSFER:Bomberos], [TRANSFER:La Bruja] o [TRANSFER:Ratón Pérez]. 2) Responde corto (1 frase).' },
-            { label: 'Ratón Pérez', emoji: '🐭', color: '#F1C40F', theme: 'radial-gradient(circle, #fffbe6, #fff0b3)', voice: { p: 1.8, r: 1.3 }, sys: 'Eres el Ratón Pérez. REGLAS: 1) Si pide hablar con otro, usa EXACTAMENTE: [TRANSFER:Doctora], [TRANSFER:Policía], [TRANSFER:Bomberos], [TRANSFER:La Bru_ja] o [TRANSFER:Cuco]. 2) Responde corto (1 frase).' }
+            { label: 'Ratón Pérez', emoji: '🐭', color: '#F1C40F', theme: 'radial-gradient(circle, #fffbe6, #fff0b3)', voice: { p: 1.8, r: 1.3 }, sys: 'Eres el Ratón Pérez. REGLAS: 1) Si pide hablar con otro, usa EXACTAMENTE: [TRANSFER:Doctora], [TRANSFER:Policía], [TRANSFER:Bomberos], [TRANSFER:La Bruja] o [TRANSFER:Cuco]. 2) Responde corto (1 frase).' }
         ];
 
         let activeContact, recognition, audioCtx;
@@ -418,7 +418,6 @@
         }
 
         function initBrain() {
-            log("🧠 Inicializando Cerebro...");
             // LLAVE DIRECTA (Solicitado por el usuario para pruebas)
             groqKey = "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";
             testConnection();
